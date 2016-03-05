@@ -12,5 +12,13 @@ public abstract class DatabaseObject
     {
         return uuid;
     }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 }
 

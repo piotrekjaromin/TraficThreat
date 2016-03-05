@@ -5,6 +5,7 @@ import com.dao.UserModelDAO;
 import com.dao.UserRoleDAO;
 import com.models.UserModel;
 import com.models.UserRole;
+import com.models.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,19 +66,49 @@ public class LoginController extends BaseController {
         return "registration";
     }
 
-
-    @RequestMapping(value = "/registration", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/registration", method = RequestMethod.POST)
     @ResponseBody
-    public String addUser(UserModel user) {
+    public String addUser(HttpServletRequest request) {
 
-        System.out.println(user);
-        //if(userModelDAO.isLogin(user.getLogin())) return "Failure: login is used";
-        //if(userModelDAO.isMail(user.getMail())) return "Failure: mail is used";
-        //user.setUserRole(userRoleDAO.saveIfNotInDB(user.getUserRole()));
-        //user.setIdNumber(new IdNumberGenerator().getRandomNumberInRange(userModelDAO, 100000, 999999));
-        //userModelDAO.save(user);
+        String login = request.getParameter("login");
+        String password = request.getParameter("password");
+        String name = request.getParameter("name");
+        String surname = request.getParameter("surname");
+        String mail = request.getParameter("mail");
+        String role = request.getParameter("userRole");
+
+        if(userModelDAO.isLogin(login)) return "Failure: login is used";
+        if(userModelDAO.isMail(mail)) return "Failure: mail is used";
+
+        UserModel user = new UserModel();
+        user.setIdNumber(new IdNumberGenerator().getRandomNumberInRange(userModelDAO, 100000, 999999));
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setMail(mail);
+        user.setSurname(surname);
+        user.setName(name);
+        user.setPassword(password);
+        UserRole userRole = new UserRole();
+        userRole.setType("USER");
+        userRole = userRoleDAO.saveIfNotInDB(userRole);
+        user.setUserRole(userRole);
+        userModelDAO.save(user);
         return "Success";
     }
+
+
+//    @RequestMapping(value = "/registration", method = RequestMethod.POST, headers = {"Accept=application/json"})
+//    @ResponseBody
+//    public String addUser(UserModel user) {
+//
+//        System.out.println(user);
+//        //if(userModelDAO.isLogin(user.getLogin())) return "Failure: login is used";
+//        //if(userModelDAO.isMail(user.getMail())) return "Failure: mail is used";
+//        //user.setUserRole(userRoleDAO.saveIfNotInDB(user.getUserRole()));
+//        //user.setIdNumber(new IdNumberGenerator().getRandomNumberInRange(userModelDAO, 100000, 999999));
+//        //userModelDAO.save(user);
+//        return "Success";
+//    }
 
     //    uruchomic tylko raz, dodaje konto admina
     @RequestMapping(value = "/addAdmin", method = RequestMethod.GET)
@@ -86,13 +117,13 @@ public class LoginController extends BaseController {
         UserModel user = new UserModel();
         user.setLogin("admin");
         user.setPassword("password");
-        //user.setName("adminName");
-        //user.setSurname("adminSurname");
-        //user.setMail("adminMail");
+        user.setName("adminName");
+        user.setSurname("adminSurname");
+        user.setMail("adminMail");
         user.setIdNumber(100000);
         UserRole role = new UserRole();
         role.setType("ADMIN");
-        userRoleDAO.save(role);
+        role = userRoleDAO.saveIfNotInDB(role);
         user.setUserRole(role);
         userModelDAO.save(user);
         return "Success";

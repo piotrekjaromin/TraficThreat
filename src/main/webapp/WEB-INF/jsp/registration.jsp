@@ -15,32 +15,30 @@
     <script>
         function signUp(role) {
 
-            if($("#login").val().length<6){
+            if($("#loginReg").val().length<6){
                 $('#alert_placeholder').html('<div class="alert alert-danger">Failure: login is too short</div>')
                 return;
             }
 
-            if($("#password").val().length<6){
+            if($("#passwordReg").val().length<6){
                 $('#alert_placeholder').html('<div class="alert alert-danger">Failure: password is too short</div>')
                 return
             }
 
-            var userRole={
-                "type": role
-            }
-
-            var user ={
-                "login" : $("#login").val(),
-                "password" : $("#password").val(),
-                "userRole": userRole
-            };
 
             $.ajax({
                 type: "POST",
-                contentType : 'application/json; charset=utf-8',
-                url: "TrafficThreat/registration",
+//                contentType : 'application/json; charset=utf-8',
+                url: "registration",
                 dataType : 'text',
-                data: JSON.stringify(user),
+                data: {
+                    login : $("#loginReg").val(),
+                    password : $("#passwordReg").val(),
+                    mail : $("#mailReg").val(),
+                    name : $("#nameReg").val(),
+                    surname : $("#surnameReg").val(),
+                    userRole: userRole
+                },
                 success: function (response) {
                     $(".form-inline").hide();
                     $('#alert_placeholder').html('<div class="alert alert-success">' + response + '</div>')
@@ -62,7 +60,19 @@
 <div class="panel panel-primary">
     <div class="panel-heading">Registration</div>
     <button class="btn btn-default" onclick="window.location.href='/'">Go to main page</button>
-    <%@include file="partOfPage/forms/registrationForm.jsp"%>
+
+
+        <input type="text" id="loginReg" class="form-control" placeholder="Login">
+        <input type="password" id="passwordReg" class="form-control" placeholder="Password">
+        <input type="text" id="mailReg" class="form-control" placeholder="Mail">
+        <input type="text" id="nameReg" class="form-control" placeholder="Name">
+        <input type="text" id="surnameReg" class="form-control" placeholder="Surname">
+
+        <button onclick="signUp('USER')" class="btn btn-default">Sign up</button>
+        <sec:authorize access="hasRole('ADMIN')">
+            <button onclick="signUp('ADMIN')" class="btn btn-default">Sign up as admin</button>
+        </sec:authorize>
+
     
     
 </div>

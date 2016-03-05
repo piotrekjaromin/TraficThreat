@@ -9,15 +9,15 @@
         <ul class="dropdown-menu">
             <li><a href="/user/userProfile">Show profile</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="/logout">Logout</a></li>
+            <li><a href="logout">Logout</a></li>
 
         </ul>
     </div>
 </sec:authorize>
 <sec:authorize access="isAnonymous()">
 
-    <button class='btn btnMenu btn-primary' onclick="location.href='/LibrarySpringMVC/registration'">Sign up</button>
-    <button class='btn btnMenu btn-primary' onclick="location.href='/LibrarySpringMVC/login'">Log in</button>
+    <button class='btn btnMenu btn-primary' onclick="location.href='/TrafficThreat/registration'">Sign up</button>
+    <button class='btn btnMenu btn-primary' onclick="location.href='/TrafficThreat/login'">Log in</button>
 
 
 </sec:authorize>

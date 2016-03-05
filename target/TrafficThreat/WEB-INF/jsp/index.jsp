@@ -16,6 +16,12 @@
 <body>
 
 <%@include file="partOfPage/buttons/loginRegistrationButton.jsp"%>
-
+<sec:authorize access="hasRole('ADMIN')">
+<button class='btn btnMenu btn-primary' onclick="location.href='addThreat'">Add threat</button>
+<button class='btn btnMenu btn-primary' onclick="location.href='addComment'">Add comment</button>
+<button class='btn btnMenu btn-primary' onclick="location.href='addVoteForThreat'">Add vote for threat</button>
+<button class='btn btnMenu btn-primary' onclick="location.href='showThreats'">Show threat</button>
+<button class='btn btnMenu btn-primary' onclick="location.href='showUsers'">Show users</button>
+</sec:authorize>
 </body>
 </html>

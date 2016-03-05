@@ -51,6 +51,12 @@ public class UserModelDAO extends DatabaseDAO<UserModel> {
     }
 
 
+    public List<UserModel> getAll() {
+
+        Query query = getSession().createQuery("from UserModel");
+        List<UserModel> users = query.list();
+        return users;
+    }
 
 
     public void update(UserModel user) {
@@ -66,10 +72,10 @@ public class UserModelDAO extends DatabaseDAO<UserModel> {
         return !query.list().isEmpty();
     }
 
-//    public boolean isMail(String mail){
-//        Query query = getSession().createQuery("from UserModel where mail='" + mail + "'");
-//        return !query.list().isEmpty();
-//    }
+    public boolean isMail(String mail){
+        Query query = getSession().createQuery("from UserModel where mail='" + mail + "'");
+        return !query.list().isEmpty();
+    }
 
     public UserModel getByIdNumber(int idNumber){
         Query query = getSession().createQuery("from UserModel where idNumber='" + idNumber + "'");

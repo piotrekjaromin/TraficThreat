@@ -15,26 +15,25 @@ public class IdNumberGenerator {
 
     public static int getRandomNumberInRange(UserModelDAO userModelDAO, int min, int max) {
 
-//        int idNumber;
-//        if (min >= max) {
-//            throw new IllegalArgumentException("max must be greater than min");
-//        }
-//
-//
-//        Random r = new Random();
-//        idNumber =  r.nextInt((max - min) + 1) + min;
-//
-//        List<Integer> idNumbers = new ArrayList<>();
-//
-//        for(UserModel user : userModelDAO.getAll()){
-//            idNumbers.add(user.getIdNumber());
-//        }
-//
-//        while(idNumbers.contains(idNumber)){
-//            r = new Random();
-//            idNumber =  r.nextInt((max - min) + 1) + min;
-//        }
-//        return idNumber;
-        return 43;
+        int idNumber;
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+
+        Random r = new Random();
+        idNumber =  r.nextInt((max - min) + 1) + min;
+
+        List<Integer> idNumbers = new ArrayList<>();
+
+        for(UserModel user : userModelDAO.getAll()){
+            idNumbers.add(user.getIdNumber());
+        }
+
+        while(idNumbers.contains(idNumber)){
+            r = new Random();
+            idNumber =  r.nextInt((max - min) + 1) + min;
+        }
+        return idNumber;
     }
 }

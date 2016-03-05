@@ -42,7 +42,7 @@ public class UserModel extends DatabaseObject
         private String surname;
 
         @OneToMany
-        private List<Threat> dangers;
+        private List<Threat> threats;
 
 
         @ManyToOne(fetch = FetchType.EAGER)
@@ -111,12 +111,20 @@ public class UserModel extends DatabaseObject
                 this.surname = surname;
         }
 
-        public List<Threat> getDangers() {
-                return dangers;
+        public List<Threat> getThreats() {
+                return threats;
         }
 
-        public void setDangers(List<Threat> dangers) {
-                this.dangers = dangers;
+        public void setThreats(List<Threat> threats) {
+                this.threats = threats;
+        }
+
+        public void addThread (Threat threat) {
+                threats.add(threat);
+        }
+
+        public void deleteThreat(Threat threat){
+                threats.remove(threat);
         }
 
         @Override
@@ -124,13 +132,11 @@ public class UserModel extends DatabaseObject
                 return "{" +
                         "\"uuid\":\"" + uuid  + '\"' +
                         ", \"login\":\"" + login + '\"'+
-//                        ", \"name\":\"" + name + '\"' +
-//                        ", \"surname\":\"" + surname + '\"' +
-//                        ", \"mail\":\"" + mail + '\"' +
+                        ", \"name\":\"" + name + '\"' +
+                        ", \"surname\":\"" + surname + '\"' +
+                        ", \"mail\":\"" + mail + '\"' +
                         ", \"idNumber\":\"" + idNumber + '\"' +
-//                        ", \"debt\":\"" + debt + '\"' +
-//                        ", \"books\":" + books  +
-//                        ", \"reservedBooks\":" + reservedBooks  +
+                        ", \"threats\":" + threats  +
                         '}';
         }
 
