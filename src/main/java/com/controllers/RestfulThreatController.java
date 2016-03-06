@@ -24,7 +24,7 @@ public class RestfulThreatController extends BaseController {
      * @return status
      */
 
-    @RequestMapping(value = "/rest/addThreats/", method = RequestMethod.GET)
+    @RequestMapping(value = "/rest/addThreat/", method = RequestMethod.POST)
     public ResponseEntity<String> addThreat(HttpServletRequest request) {
         String typeOfThreat = request.getParameter("typeOfThreat");
         String description= request.getParameter("description");
@@ -62,7 +62,7 @@ public class RestfulThreatController extends BaseController {
      * @return status
      */
 
-    @RequestMapping(value = "/rest/approveThreats/", method = RequestMethod.GET)
+    @RequestMapping(value = "/rest/approveThreat/", method = RequestMethod.POST)
     public ResponseEntity<String> approveThreat(HttpServletRequest request) {
         String threatUuid = request.getParameter("threadUuid");
         String token = request.getParameter("token");
@@ -87,7 +87,7 @@ public class RestfulThreatController extends BaseController {
      * @return status
      */
 
-    @RequestMapping(value = "/rest/addComment/", method = RequestMethod.GET)
+    @RequestMapping(value = "/rest/addComment/", method = RequestMethod.POST)
     public ResponseEntity<String> addComment(HttpServletRequest request) {
         String comment = request.getParameter("comment");
         String threatUuid = request.getParameter("uuid");
@@ -114,7 +114,7 @@ public class RestfulThreatController extends BaseController {
      * @return status
      */
 
-    @RequestMapping(value = "/rest/addVote/", method = RequestMethod.GET)
+    @RequestMapping(value = "/rest/addVote/", method = RequestMethod.POST)
     public ResponseEntity<String> addVote(HttpServletRequest request) {
         short numberOfStars = Short.parseShort(request.getParameter("stars"));
         String threadUuid = request.getParameter("uuid");

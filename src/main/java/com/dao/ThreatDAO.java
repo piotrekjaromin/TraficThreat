@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Repository
@@ -31,11 +32,11 @@ public class ThreatDAO extends DatabaseDAO<Threat>{
     }
 
     public List<Threat> getAllApproved() {
-        return getSession().createQuery("from Threat where isApproved LIKE lower('true')").list();
+        return getAll().stream().filter(x-> x.getIsApproved()==true).collect(Collectors.toList());
     }
 
     public List<Threat> getAllNotApproved() {
-        return getSession().createQuery("from Threat where isApproved not LIKE lower('true')").list();
+        return getAll().stream().filter(x -> x.getIsApproved() == false).collect(Collectors.toList());
     }
 
 
