@@ -33,11 +33,11 @@ public class RestfulThreatController extends BaseController {
         Session session = sessionManager.getAndUpdateSession(token);
 
         if (session == null)
-            return new ResponseEntity<String>("{\"Status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<String>("{\"status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
 
         Coordinates coordinates1 = new Coordinates();
         coordinates1.setHorizontal(coordinates.split(";")[0]);
-        coordinates1.setVertical(coordinates.split(";")[0]);
+        coordinates1.setVertical(coordinates.split(";")[1]);
         coordinatesDAO.save(coordinates1);
         ThreatType threatType = new ThreatType();
         threatType.setThreatType(typeOfThreat);
@@ -54,7 +54,7 @@ public class RestfulThreatController extends BaseController {
         user.addThread(threat);
         userModelDAO.update(user);
 
-        return new ResponseEntity<String>("{\"Status\" : \"Success\"}",HttpStatus.OK);
+        return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
     }
 
     /**
@@ -69,16 +69,16 @@ public class RestfulThreatController extends BaseController {
         Session session = sessionManager.getAndUpdateSession(token);
 
         if (session == null)
-            return new ResponseEntity<String>("{\"Status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<String>("{\"status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
 
         if(!userModelDAO.getByLogin(session.getLogin()).getUserRole().getType().equals("ADMIN"))
-            return new ResponseEntity<String>("{\"Status\" : \"Failure no permission\"}",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<String>("{\"status\" : \"Failure no permission\"}",HttpStatus.FORBIDDEN);
 
         Threat threat = threatDAO.get(threatUuid);
         threat.setIsApproved(true);
         threatDAO.update(threat);
 
-        return new ResponseEntity<String>("{\"Status\" : \"Success\"}",HttpStatus.OK);
+        return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
     }
 
 
@@ -95,7 +95,7 @@ public class RestfulThreatController extends BaseController {
         Session session = sessionManager.getAndUpdateSession(token);
 
         if (session == null)
-            return new ResponseEntity<String>("{\"Status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<String>("{\"status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
 
         ThreatComment threatComment = new ThreatComment();
         threatComment.setDate(new Date());
@@ -106,7 +106,7 @@ public class RestfulThreatController extends BaseController {
         threat.addComment(threatComment);
         threatDAO.update(threat);
 
-        return new ResponseEntity<String>("{\"Status\" : \"Success\"}",HttpStatus.OK);
+        return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
     }
 
     /**
@@ -123,10 +123,10 @@ public class RestfulThreatController extends BaseController {
         Threat threat = threatDAO.get(threadUuid);
 
         if (session == null)
-            return new ResponseEntity<String>("{\"Status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<String>("{\"status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
 
         if (threat == null)
-            return new ResponseEntity<String>("{\"Status\" : \"Failure bad threat uuid\"}",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<String>("{\"status\" : \"Failure bad threat uuid\"}",HttpStatus.UNAUTHORIZED);
 
         Vote vote = new Vote();
         vote.setLogin(session.getLogin());
@@ -136,7 +136,7 @@ public class RestfulThreatController extends BaseController {
         threat.addVote(vote);
         threatDAO.update(threat);
 
-        return new ResponseEntity<String>("{\"Status\" : \"Success\"}",HttpStatus.OK);
+        return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
     }
 
 
@@ -237,15 +237,15 @@ public class RestfulThreatController extends BaseController {
         Session session = sessionManager.getAndUpdateSession(token);
 
         if (session == null)
-            return new ResponseEntity<String>("{\"Status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<String>("{\"status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
 
         if(!userModelDAO.getByLogin(session.getLogin()).getUserRole().getType().equals("ADMIN"))
-            return new ResponseEntity<String>("{\"Status\" : \"Failure no permission\"}",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<String>("{\"status\" : \"Failure no permission\"}",HttpStatus.FORBIDDEN);
 
         Threat threat = threatDAO.get(uuid);
         if (threat == null) {
             System.out.println("Unable to delete. threat with uuid " + uuid + " not found");
-            return new ResponseEntity<String>("{\"Status\" : \"Failure threat not found\"}",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>("{\"status\" : \"Failure threat not found\"}",HttpStatus.NOT_FOUND);
         }
         Threat threat1 = threatDAO.get(uuid);
 
@@ -274,7 +274,7 @@ public class RestfulThreatController extends BaseController {
             voteDAO.delete(vote);
 
         threatDAO.delete(threat);
-        return new ResponseEntity<String>("{\"Status\" : \"Success\"}",HttpStatus.OK);
+        return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
     }
 
 
@@ -295,14 +295,14 @@ public class RestfulThreatController extends BaseController {
 
         if (comment == null) {
             System.out.println("Unable to delete. threat with uuid " + uuid + " not found");
-            return new ResponseEntity<String>("{\"Status\" : \"Failure threat not found\"}",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>("{\"status\" : \"Failure threat not found\"}",HttpStatus.NOT_FOUND);
         }
 
         if (session == null)
-            return new ResponseEntity<String>("{\"Status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<String>("{\"status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
 
         if(!userModelDAO.getByLogin(session.getLogin()).getUserRole().getType().equals("ADMIN") || !session.getLogin().equals(comment.getLogin()))
-            return new ResponseEntity<String>("{\"Status\" : \"Failure no permission\"}",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<String>("{\"status\" : \"Failure no permission\"}",HttpStatus.FORBIDDEN);
 
         for(Threat threat : threatDAO.getAll()) {
             if(threat.getThreatComments().contains(threatCommentDAO.get(uuid))){
@@ -312,6 +312,6 @@ public class RestfulThreatController extends BaseController {
             }
         }
         threatCommentDAO.delete(threatCommentDAO.get(uuid));
-        return new ResponseEntity<String>("{\"Status\" : \"Success\"}",HttpStatus.OK);
+        return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
     }
 }

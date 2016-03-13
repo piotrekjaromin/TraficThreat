@@ -13,7 +13,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
-        function signUp(role) {
+        function signUp(userRole) {
 
             if($("#loginReg").val().length<6){
                 $('#alert_placeholder').html('<div class="alert alert-danger">Failure: login is too short</div>')

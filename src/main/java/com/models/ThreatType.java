@@ -15,7 +15,7 @@ public class ThreatType {
 
     private String uuid;
 
-    private String threaType;
+    private String threatType;
 
     public String getUuid() {
         return uuid;
@@ -26,18 +26,18 @@ public class ThreatType {
     }
 
     public String getThreatType() {
-        return threaType;
+        return threatType;
     }
 
     public void setThreatType(String threat) {
-        this.threaType = threat;
+        this.threatType = threat;
     }
 
     @Override
     public String toString() {
         return "{" +
                 "\"uuid\":\"" + uuid + '\"' +
-                ", \"threatType\":\"" + threaType + '\"' +
+                ", \"threatType\":\"" + threatType + '\"' +
                 '}';
     }
 }
