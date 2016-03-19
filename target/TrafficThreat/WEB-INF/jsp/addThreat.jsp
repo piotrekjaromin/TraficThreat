@@ -19,6 +19,7 @@
             typeOfThreat : $("#typeOfThreat").val(),
             description : $("#description").val(),
             coordinates : $("#coordinates").val(),
+            location : $("#location").val()
 
           },
           success: function (response) {
@@ -39,12 +40,16 @@
 
 <div class="panel panel-primary">
   <div class="panel-heading">Add threat</div>
-  <button class="btn btn-default" onclick="window.location.href='/TrafficThreat'">Go to main page</button>
+  <button class="btn btn-default" onclick="window.location.href='/TrafficThreat'">Go to main page</button></div><br>
 
 
-  <input type="text" id="typeOfThreat" class="form-control" placeholder="Type of threat">
+  type of threat: <select id="typeOfThreat">
+    <option value="stale">stale</option>
+    <option value="krotkotrwale">krotkotrwale</option>
+  </select> <br>
   <input type="text" id="description" class="form-control" placeholder="Description">
   <input type="text" id="coordinates" class="form-control" placeholder="Coordinates">
+  <input type="text" id="location" class="form-control" placeholder="Location">
 
 
   <button onclick="addThreat()" class="btn btn-default">Add threat</button>

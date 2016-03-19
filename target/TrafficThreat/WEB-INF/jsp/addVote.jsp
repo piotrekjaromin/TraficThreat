@@ -36,6 +36,7 @@
 
 
   <input type="number" id="stars" class="form-control" placeholder="Number of stars">
+  <input type="text" id="comment" class="form-control" placeholder="Number of stars">
   <input type="text" id="uuid" class="form-control" placeholder="Thread uuid">
 
 

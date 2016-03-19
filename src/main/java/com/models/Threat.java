@@ -25,9 +25,6 @@ public class Threat extends DatabaseObject {
 
     private String login;
 
-    @OneToMany
-    private List<ThreatComment> threatComments;
-
     private Date date;
 
     @OneToMany
@@ -63,9 +60,6 @@ public class Threat extends DatabaseObject {
         this.type = type;
     }
 
-    public void addComment(ThreatComment comment) {
-        threatComments.add(comment);
-    }
 
     public void addVote(Vote vote) {
         votes.add(vote);
@@ -79,13 +73,6 @@ public class Threat extends DatabaseObject {
         this.description = description;
     }
 
-    public List<ThreatComment> getThreatComments() {
-        return threatComments;
-    }
-
-    public void setThreatComments(List<ThreatComment> threatComments) {
-        this.threatComments = threatComments;
-    }
 
     public Date getDate() {
         return date;
@@ -119,13 +106,9 @@ public class Threat extends DatabaseObject {
         this.isApproved = isApproved;
     }
 
-    public void deleteComment(ThreatComment comment){
-        threatComments.remove(comment);
-    }
 
     public void deleteAllConection(){
         type=null;
-        threatComments.clear();
         votes.clear();
         coordinates=null;
 
@@ -139,7 +122,6 @@ public class Threat extends DatabaseObject {
                 ", \"login\":\"" + login + '\"'+
                 ", \"type\":" + type +
                 ", \"description\":\"" + description + '\"' +
-                ", \"threatComments\": " + threatComments  +
                 ", \"votes\": " + votes +
                 ", \"coordinates\":" + coordinates +
                 ", \"isApproved\":\"" + isApproved + '\"' +

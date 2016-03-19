@@ -20,9 +20,6 @@ public abstract class BaseController {
     ThreatDAO threatDAO;
 
     @Autowired
-    ThreatCommentDAO threatCommentDAO;
-
-    @Autowired
     VoteDAO voteDAO;
 
     @Autowired

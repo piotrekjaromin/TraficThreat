@@ -13,7 +13,8 @@
         dataType: 'text',
         data: {
           stars: $("#stars").val(),
-          uuid: $("#uuid").val()
+          uuid: $("#uuid").val(),
+          uuid: $("#comment").val()
         },
         success: function (response) {
           $(".form-inline").hide();
@@ -36,6 +37,7 @@
 
 
   <input type="number" id="stars" class="form-control" placeholder="Number of stars">
+  <input type="text" id="comment" class="form-control" placeholder="Comment">
   <input type="text" id="uuid" class="form-control" placeholder="Thread uuid">
 
 

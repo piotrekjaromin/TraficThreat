@@ -1,9 +1,6 @@
 package com.controllers;
 
 
-import com.dao.CoordinatesDAO;
-import com.dao.ThreatCommentDAO;
-import com.dao.ThreatTypeDAO;
 import com.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +29,7 @@ public class RestfulThreatController extends BaseController {
         String typeOfThreat = request.getParameter("typeOfThreat");
         String description= request.getParameter("description");
         String coordinates = request.getParameter("coordinates");
+        String location = request.getParameter("location");
         String token = request.getParameter("token");
         Session session = sessionManager.getAndUpdateSession(token);
 
@@ -38,6 +39,10 @@ public class RestfulThreatController extends BaseController {
         Coordinates coordinates1 = new Coordinates();
         coordinates1.setHorizontal(coordinates.split(";")[0]);
         coordinates1.setVertical(coordinates.split(";")[1]);
+        coordinates1.setCity(location.split(";")[0]);
+        coordinates1.setCountry(location.split(";")[1]);
+        coordinates1.setStreet(location.split(";")[2]);
+        coordinates1.setStreetNumber(location.split(";")[3]);
         coordinatesDAO.save(coordinates1);
         ThreatType threatType = new ThreatType();
         threatType.setThreatType(typeOfThreat);
@@ -82,32 +87,6 @@ public class RestfulThreatController extends BaseController {
     }
 
 
-    /**
-     * Dodawanie komentarza. tylko zalogowani uzytkownicy
-     * @return status
-     */
-
-    @RequestMapping(value = "/rest/addComment/", method = RequestMethod.POST)
-    public ResponseEntity<String> addComment(HttpServletRequest request) {
-        String comment = request.getParameter("comment");
-        String threatUuid = request.getParameter("uuid");
-        String token = request.getParameter("token");
-        Session session = sessionManager.getAndUpdateSession(token);
-
-        if (session == null)
-            return new ResponseEntity<String>("{\"status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
-
-        ThreatComment threatComment = new ThreatComment();
-        threatComment.setDate(new Date());
-        threatComment.setComment(comment);
-        threatComment.setLogin(session.getLogin());
-        threatCommentDAO.save(threatComment);
-        Threat threat = threatDAO.get(threatUuid);
-        threat.addComment(threatComment);
-        threatDAO.update(threat);
-
-        return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
-    }
 
     /**
      * Dodawanie glosu (glosowanie). tylko zalogowani uzytkownicy
@@ -118,9 +97,12 @@ public class RestfulThreatController extends BaseController {
     public ResponseEntity<String> addVote(HttpServletRequest request) {
         short numberOfStars = Short.parseShort(request.getParameter("stars"));
         String threadUuid = request.getParameter("uuid");
+        String login = request.getParameter("login");
+        String comment = request.getParameter("comment");
         String token = request.getParameter("token");
         Session session = sessionManager.getAndUpdateSession(token);
         Threat threat = threatDAO.get(threadUuid);
+        Date date = new Date();
 
         if (session == null)
             return new ResponseEntity<String>("{\"status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
@@ -131,6 +113,9 @@ public class RestfulThreatController extends BaseController {
         Vote vote = new Vote();
         vote.setLogin(session.getLogin());
         vote.setNumberOfStars(numberOfStars);
+        vote.setLogin(login);
+        vote.setComment(comment);
+        vote.setDate(date);
         voteDAO.save(vote);
 
         threat.addVote(vote);
@@ -189,7 +174,7 @@ public class RestfulThreatController extends BaseController {
      */
 
     @RequestMapping(value = "/rest/getThreat/", method = RequestMethod.GET)
-    public ResponseEntity<Threat> getBook(HttpServletRequest request) {
+    public ResponseEntity<Threat> getThreat(HttpServletRequest request) {
         String uuid = request.getParameter("uuid");
 
         Threat threat = threatDAO.get(uuid);
@@ -200,27 +185,6 @@ public class RestfulThreatController extends BaseController {
         return new ResponseEntity<Threat>(threat, HttpStatus.OK);
     }
 
-    /**
-     * Zwraca komentarz o podanych uuid. Dostep wszyscy.
-     * @param request -"uuid"
-     * @return komentarz o podanym id
-     */
-
-    @RequestMapping(value = "/rest/getThreatComment/", method = RequestMethod.GET)
-    public ResponseEntity<ThreatComment> getComment(HttpServletRequest request) {
-        String uuid = request.getParameter("uuid");
-
-        ThreatComment comment = threatCommentDAO.get(uuid);
-        if (comment == null) {
-            System.out.println("comment with uuid " + uuid + " not found");
-            return new ResponseEntity<ThreatComment>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<ThreatComment>(comment, HttpStatus.OK);
-    }
-
-
-
-    //Nie dziala
 
     /**
      * Usuwa Zagrozenie o podanym uuid. Tylko admin
@@ -261,8 +225,6 @@ public class RestfulThreatController extends BaseController {
         threat.deleteAllConection();
         threatDAO.update(threat);
 
-        for (ThreatComment comment : threat1.getThreatComments())
-            threatCommentDAO.delete(comment);
 
         if(threat1.getType()!=null)
             threatTypeDAO.delete(threat1.getType());
@@ -278,40 +240,5 @@ public class RestfulThreatController extends BaseController {
     }
 
 
-    /**
-     * Usuwa komentarz o podanym uuid. Tylko admin lub autor komentarza
-     * @param request -"uuid", "token"
-     * @return status
-     */
 
-    @RequestMapping(value = "/rest/deleteComment/", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteComment(HttpServletRequest request) {
-
-        String token = request.getParameter("token");
-        String uuid= request.getParameter("uuid");
-
-        Session session = sessionManager.getAndUpdateSession(token);
-        ThreatComment comment = threatCommentDAO.get(uuid);
-
-        if (comment == null) {
-            System.out.println("Unable to delete. threat with uuid " + uuid + " not found");
-            return new ResponseEntity<String>("{\"status\" : \"Failure threat not found\"}",HttpStatus.NOT_FOUND);
-        }
-
-        if (session == null)
-            return new ResponseEntity<String>("{\"status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
-
-        if(!userModelDAO.getByLogin(session.getLogin()).getUserRole().getType().equals("ADMIN") || !session.getLogin().equals(comment.getLogin()))
-            return new ResponseEntity<String>("{\"status\" : \"Failure no permission\"}",HttpStatus.FORBIDDEN);
-
-        for(Threat threat : threatDAO.getAll()) {
-            if(threat.getThreatComments().contains(threatCommentDAO.get(uuid))){
-                threat.deleteComment(threatCommentDAO.get(uuid));
-                threatDAO.update(threat);
-                break;
-            }
-        }
-        threatCommentDAO.delete(threatCommentDAO.get(uuid));
-        return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
-    }
 }
