@@ -2,13 +2,18 @@ package com.controllers;
 
 
 import com.models.*;
+import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -139,6 +144,24 @@ public class RestfulThreatController extends BaseController {
         return new ResponseEntity<List<Threat>>(threats, HttpStatus.OK);
     }
 
+
+    /**
+     * Pobieranie wszystkich zagrozen. Dostep wszyscy
+     * @return lista zagrozen
+     */
+
+    @RequestMapping(value = "/rest/getUserThreats/", method = RequestMethod.GET)
+    public ResponseEntity<List<Threat>> listAllUserThreat(HttpServletRequest request) {
+        String userUuid = request.getParameter("uuid");
+        UserModel user = userModelDAO.getByLogin(userUuid);
+
+        List<Threat> threats = user.getThreats();
+        if (threats.isEmpty()) {
+            return new ResponseEntity<List<Threat>>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<List<Threat>>(threats, HttpStatus.OK);
+    }
+
     /**
      * Pobieranie zatwierdzonych zagrozen. Dostep wszyscy
      * @return lista zagrozen
@@ -237,6 +260,68 @@ public class RestfulThreatController extends BaseController {
 
         threatDAO.delete(threat);
         return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/rest/getImage/", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> testphoto(HttpServletRequest request) throws IOException {
+        String threatUuid = request.getParameter("uuid");
+        Threat threat = threatDAO.get(threatUuid);
+        if(threat!=null) {
+            InputStream in;
+            if (threat.getPathToPhoto() != null) {
+                in = new BufferedInputStream(new FileInputStream(threat.getPathToPhoto()));
+                final HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.IMAGE_PNG);
+
+                return new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.CREATED);
+            }
+            return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(value = {"/rest/addImage/"}, method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> addImage(HttpServletRequest request , @RequestParam("file") MultipartFile file) {
+        String threatUuid = request.getParameter("uuid");
+
+        if (!file.isEmpty()) {
+            try {
+
+                Threat threat = threatDAO.get(threatUuid);
+
+                if(threat==null){
+                    return new ResponseEntity<String>("{\"status\" : \"Failure threat not found\"}",HttpStatus.NOT_FOUND);
+                }
+
+                byte[] bytes = file.getBytes();
+
+                // Creating the directory to store file
+                String rootPath = System.getProperty("catalina.home");
+                File dir = new File("tmpFiles");
+                if (!dir.exists())
+                    dir.mkdirs();
+
+                // Create the file on server
+                File serverFile = new File(dir.getAbsolutePath()
+                        + File.separator + threatUuid);
+                BufferedOutputStream stream = new BufferedOutputStream(
+                        new FileOutputStream(serverFile));
+                stream.write(bytes);
+
+                threat.setPathToPhoto(dir.getAbsolutePath()
+                        + File.separator + threatUuid);
+                threatDAO.update(threat);
+
+                return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.NOT_FOUND);
+            }
+            catch (Exception e) {
+                return new ResponseEntity<String>("{\"status\" : \"Failure\"}",HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
+            return new ResponseEntity<String>("{\"status\" : \"Failure file is empty\"}",HttpStatus.NOT_FOUND);
+        }
     }
 
 

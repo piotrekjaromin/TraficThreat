@@ -3,6 +3,11 @@ package com.controllers;
 
 import com.models.*;
 import javafx.application.Application;
+import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -15,9 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.Date;
 
 
@@ -65,18 +68,44 @@ public class ThreatController extends BaseController {
 
     }
 
+    @RequestMapping(value = "/addImage", method = RequestMethod.GET)
+    public String goAddImage(ModelMap model) {
+        return "addImage";
+    }
+
     @RequestMapping(value = {"/addImage"}, method = RequestMethod.POST)
     @ResponseBody
     public String addImage(HttpServletRequest request , @RequestParam("file") MultipartFile file) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String threadUuid = request.getParameter("uuid");
+        String threatUuid = request.getParameter("uuid");
+
 
         if (!file.isEmpty()) {
             try {
+
+                Threat threat = threatDAO.get(threatUuid);
+
+
+                byte[] bytes = file.getBytes();
+
+                // Creating the directory to store file
+                String rootPath = System.getProperty("catalina.home");
+                File dir = new File("tmpFiles");
+                if (!dir.exists())
+                    dir.mkdirs();
+
+                // Create the file on server
+                File serverFile = new File(dir.getAbsolutePath()
+                        + File.separator + threatUuid);
                 BufferedOutputStream stream = new BufferedOutputStream(
-                        new FileOutputStream(new File("image" + threadUuid)));
-                FileCopyUtils.copy(file.getInputStream(), stream);
-                stream.close();
+                        new FileOutputStream(serverFile));
+                stream.write(bytes);
+
+                threat.setPathToPhoto(dir.getAbsolutePath()
+                        + File.separator + threatUuid);
+                threatDAO.update(threat);
+
+                return "You successfully uploaded file";
             }
             catch (Exception e) {
                 return "Error";
@@ -85,8 +114,11 @@ public class ThreatController extends BaseController {
         else {
             return "file was empty";
         }
+    }
 
-        return "Success";
+    @RequestMapping(value = "/showImage", method = RequestMethod.GET)
+    public String goShowdImage(ModelMap model) {
+        return "showImage";
     }
 
 
@@ -128,5 +160,31 @@ public class ThreatController extends BaseController {
         model.addAttribute("users", userModelDAO.getAll());
         return "showUsers";
     }
+
+
+    @RequestMapping(value = "/showImage", method = RequestMethod.POST)
+    @ResponseBody
+    public byte[] showImage(HttpServletRequest request) {
+        String threatUuid = request.getParameter("uuid");
+        Threat threat = threatDAO.get(threatUuid);
+        if(threat!=null) {
+            InputStream in;
+            if (threat.getPathToPhoto() != null) {
+                try {
+                    final HttpHeaders headers = new HttpHeaders();
+                    headers.setContentType(MediaType.IMAGE_PNG);
+                    in = new BufferedInputStream(new FileInputStream(threat.getPathToPhoto()));
+                    return IOUtils.toByteArray(in);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        return null;
+    }
+
 
 }

@@ -27,6 +27,8 @@ public class Threat extends DatabaseObject {
 
     private Date date;
 
+    private String pathToPhoto;
+
     @OneToMany
     private List<Vote> votes;
 
@@ -106,6 +108,13 @@ public class Threat extends DatabaseObject {
         this.isApproved = isApproved;
     }
 
+    public String getPathToPhoto() {
+        return pathToPhoto;
+    }
+
+    public void setPathToPhoto(String pathToPhoto) {
+        this.pathToPhoto = pathToPhoto;
+    }
 
     public void deleteAllConection(){
         type=null;
@@ -125,6 +134,7 @@ public class Threat extends DatabaseObject {
                 ", \"votes\": " + votes +
                 ", \"coordinates\":" + coordinates +
                 ", \"isApproved\":\"" + isApproved + '\"' +
+                ", \"path to photo\":\"" + pathToPhoto + '\"' +
                 '}';
     }
 

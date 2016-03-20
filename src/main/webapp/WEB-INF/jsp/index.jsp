@@ -22,6 +22,8 @@
 <button class='btn btnMenu btn-primary' onclick="location.href='addVoteForThreat'">Add vote for threat</button>
 <button class='btn btnMenu btn-primary' onclick="location.href='showThreats'">Show threat</button>
 <button class='btn btnMenu btn-primary' onclick="location.href='showUsers'">Show users</button>
+<button class='btn btnMenu btn-primary' onclick="location.href='addImage'">Add image</button>
+<button class='btn btnMenu btn-primary' onclick="location.href='showImage'">Show image</button>
 </sec:authorize>
 </body>
 </html>
