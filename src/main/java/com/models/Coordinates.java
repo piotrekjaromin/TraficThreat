@@ -19,21 +19,10 @@ public class Coordinates {
 
     private String horizontal;
 
-    private String country;
-
     private String city;
 
     private String street;
 
-    private String streetNumber;
-
-    public String getStreetNumber() {
-        return streetNumber;
-    }
-
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
-    }
 
     public String getStreet() {
         return street;
@@ -49,14 +38,6 @@ public class Coordinates {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 
     public String getCity() {
@@ -87,10 +68,8 @@ public class Coordinates {
     public String toString() {
         return "{" +
                 "\"uuid\":\"" + uuid + '\"' +
-                ", \"country\":\"" + country + '\"' +
                 ", \"city\":\"" + city + '\"' +
                 ", \"street\":\"" + street+ '\"' +
-                ", \"street number\":\"" + streetNumber+ '\"' +
                 ", \"horizontal\":\"" + horizontal + '\"' +
                 ", \"vertical\":\"" + vertical + '\"' +
                 '}';

@@ -46,9 +46,7 @@ public class ThreatController extends BaseController {
         coordinates1.setHorizontal(coordinates.split(";")[0]);
         coordinates1.setVertical(coordinates.split(";")[1]);
         coordinates1.setCity(location.split(";")[0]);
-        coordinates1.setCountry(location.split(";")[1]);
         coordinates1.setStreet(location.split(";")[2]);
-        coordinates1.setStreetNumber(location.split(";")[3]);
         coordinatesDAO.save(coordinates1);
         ThreatType threatType = new ThreatType();
         threatType.setThreatType(typeOfThreat);
