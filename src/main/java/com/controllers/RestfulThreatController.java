@@ -63,8 +63,9 @@ public class RestfulThreatController extends BaseController {
         UserModel user = userModelDAO.getByLogin(session.getLogin());
         user.addThread(threat);
         userModelDAO.update(user);
+        String threatUuid = threat.getUuid();
 
-        return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
+        return new ResponseEntity<String>("{\"status\" : \"Success\", \"uuid\" : \"" + threatUuid + "\"}",HttpStatus.OK);
     }
 
     /**
@@ -226,7 +227,7 @@ public class RestfulThreatController extends BaseController {
         if (session == null)
             return new ResponseEntity<String>("{\"status\" : \"Failure bad token\"}",HttpStatus.UNAUTHORIZED);
 
-        if(!userModelDAO.getByLogin(session.getLogin()).getUserRole().getType().equals("ADMIN"))
+        if(userModelDAO.getByLogin(session.getLogin()).getUserRole().getType().equals("ADMIN"))
             return new ResponseEntity<String>("{\"status\" : \"Failure no permission\"}",HttpStatus.FORBIDDEN);
 
         Threat threat = threatDAO.get(uuid);
@@ -323,6 +324,7 @@ public class RestfulThreatController extends BaseController {
             return new ResponseEntity<String>("{\"status\" : \"Failure file is empty\"}",HttpStatus.NOT_FOUND);
         }
     }
+
 
 
 
