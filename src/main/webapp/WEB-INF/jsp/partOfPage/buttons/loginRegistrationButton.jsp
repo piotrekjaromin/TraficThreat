@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <sec:authorize access="hasAnyRole('ADMIN', 'USER')">
-    <%--get user name--%>
+
     <sec:authentication var="principal" property="principal"/>
     <div class="btn-group">
         <button type="button" class="btn btnMenu btn-primary dropdown-toggle" data-toggle="dropdown">

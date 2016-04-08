@@ -9,18 +9,19 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
+    <title>Registration</title>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
         function signUp(userRole) {
 
-            if($("#loginReg").val().length<6){
+            if ($("#loginReg").val().length < 6) {
                 $('#alert_placeholder').html('<div class="alert alert-danger">Failure: login is too short</div>')
                 return;
             }
 
-            if($("#passwordReg").val().length<6){
+            if ($("#passwordReg").val().length < 6) {
                 $('#alert_placeholder').html('<div class="alert alert-danger">Failure: password is too short</div>')
                 return
             }
@@ -30,13 +31,13 @@
                 type: "POST",
 //                contentType : 'application/json; charset=utf-8',
                 url: "registration",
-                dataType : 'text',
+                dataType: 'text',
                 data: {
-                    login : $("#loginReg").val(),
-                    password : $("#passwordReg").val(),
-                    mail : $("#mailReg").val(),
-                    name : $("#nameReg").val(),
-                    surname : $("#surnameReg").val(),
+                    login: $("#loginReg").val(),
+                    password: $("#passwordReg").val(),
+                    mail: $("#mailReg").val(),
+                    name: $("#nameReg").val(),
+                    surname: $("#surnameReg").val(),
                     userRole: userRole
                 },
                 success: function (response) {
@@ -55,13 +56,14 @@
 <body>
 
 <h2>Library</h2>
-<%@include file="partOfPage/buttons/loginRegistrationButton.jsp"%>
+<%@include file="partOfPage/buttons/loginRegistrationButton.jsp" %>
 
 <div class="panel panel-primary">
-    <div class="panel-heading">Registration</div>
-    <button class="btn btn-default" onclick="window.location.href='/'">Go to main page</button>
-
-
+    <div class="panel-heading">
+        Registration
+        <button class="btn btn-default" onclick="window.location.href='/'">Go to main page</button>
+    </div>
+    <div class="panel-body">
         <input type="text" id="loginReg" class="form-control" placeholder="Login">
         <input type="password" id="passwordReg" class="form-control" placeholder="Password">
         <input type="text" id="mailReg" class="form-control" placeholder="Mail">
@@ -73,8 +75,7 @@
             <button onclick="signUp('ADMIN')" class="btn btn-default">Sign up as admin</button>
         </sec:authorize>
 
-    
-    
+    </div>
 </div>
 <div id="alert_placeholder">
 

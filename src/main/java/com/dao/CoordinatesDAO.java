@@ -12,4 +12,8 @@ public class CoordinatesDAO extends DatabaseDAO<Coordinates>{
     public void delete (Coordinates coordinates){
         getSession().delete(coordinates);
     }
+
+    public void update(Coordinates coordinates) {
+        getSession().update(coordinates);
+    }
 }

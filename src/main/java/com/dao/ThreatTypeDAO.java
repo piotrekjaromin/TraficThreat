@@ -17,4 +17,7 @@ public class ThreatTypeDAO extends DatabaseDAO<ThreatType>{
         getSession().delete(type);
     }
 
+    public void update(ThreatType threatType) {
+        getSession().update(threatType);
+    }
     }

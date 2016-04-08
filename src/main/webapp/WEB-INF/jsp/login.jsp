@@ -5,19 +5,24 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>Login page</title>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="<c:url value='main.css'/>" rel="stylesheet" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-<h2>Library</h2>
+
+<h2>Traffic threat</h2>
 <%@include file="partOfPage/buttons/loginRegistrationButton.jsp" %>
 
 <div class="panel panel-primary">
-    <div class="panel-heading">Log in</div>
+    <div class="panel-heading">
+        Log in
+        <button class="btn btn-default goToMainPage" onclick="window.location.href='/'">Go to main page</button>
+    </div>
     <div class="panel-body">
-        <button class="btn btn-default" onclick="window.location.href='/'">Go to main page</button>
-        <c:url var="loginUrl" value="/login"/>
+
+        <%--<c:url var="loginUrl" value="/login"/>--%>
         <form action="${loginUrl}" method="post" class="form-horizontal">
             <c:if test="${param.error != null}">
                 <div class="alert alert-danger">
