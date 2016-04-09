@@ -7,10 +7,30 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
     <script>
+
+        function checkData() {
+            if($("#stars").val() == "") {
+                $('#alert_placeholder').html('<div class="alert alert-danger">Error: no stars </div>')
+                return;
+            }
+            if($("#comment").val() == "") {
+                $('#alert_placeholder').html('<div class="alert alert-danger">Error: no comment</div>')
+                return;
+            }
+            if($("#uuid").val() == "") {
+                $('#alert_placeholder').html('<div class="alert alert-danger">Error: no uuid</div>')
+                return;
+            }
+
+            addVote();
+
+        }
+
+
         function addVote() {
             $.ajax({
                 type: "POST",
-                url: "addVoteForThreat",
+                url: "user/addVoteForThreat",
                 dataType: 'text',
                 data: {
                     stars: $("#stars").val(),
@@ -18,7 +38,6 @@
                     comment: $("#comment").val()
                 },
                 success: function (response) {
-                    $(".form-inline").hide();
                     $('#alert_placeholder').html('<div class="alert alert-success">' + response + '</div>')
                 },
                 error: function (response) {
@@ -42,9 +61,10 @@
         <input type="text" id="uuid" class="form-control" placeholder="Thread uuid">
 
 
-        <button onclick="addVote()" class="btn btn-default">Add Vote</button>
+        <button onclick="checkData()" class="btn btn-default">Add Vote</button>
+        <div id="alert_placeholder"></div>
     </div>
 </div>
-<div id="alert_placeholder"></div>
+
 </body>
 </html>

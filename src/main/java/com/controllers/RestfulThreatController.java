@@ -63,7 +63,7 @@ public class RestfulThreatController extends BaseController {
         userModelDAO.update(user);
         String threatUuid = threat.getUuid();
 
-        return new ResponseEntity<String>("{\"status\" : \"Success\", \"uuid\" : \"" + threatUuid + "\"}",HttpStatus.OK);
+        return new ResponseEntity<String>("{\"status\" : \"Success\", \"uuid\" : \"" + threatUuid + "\",\"what\" : \"threat added\"}",HttpStatus.OK);
     }
 
     /**
@@ -87,7 +87,7 @@ public class RestfulThreatController extends BaseController {
         threat.setIsApproved(true);
         threatDAO.update(threat);
 
-        return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
+        return new ResponseEntity<String>("{\"status\" : \"Success\",\"what\" : \"threat approved\"}",HttpStatus.OK);
     }
 
 
@@ -125,7 +125,7 @@ public class RestfulThreatController extends BaseController {
         threat.addVote(vote);
         threatDAO.update(threat);
 
-        return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
+        return new ResponseEntity<String>("{\"status\" : \"Success\" ,\"what\" : \"vote added\"}",HttpStatus.OK);
     }
 
 
@@ -248,6 +248,12 @@ public class RestfulThreatController extends BaseController {
         threatDAO.update(threat);
 
 
+        if(threat1.getPathToPhoto()!=null) {
+            File file = new File(threat1.getPathToPhoto());
+            file.delete();
+        }
+
+
         if(threat1.getType()!=null)
             threatTypeDAO.delete(threat1.getType());
 
@@ -258,7 +264,7 @@ public class RestfulThreatController extends BaseController {
             voteDAO.delete(vote);
 
         threatDAO.delete(threat);
-        return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.OK);
+        return new ResponseEntity<String>("{\"status\" : \"Success\" ,\"what\" : \"threat deleted\"}",HttpStatus.OK);
     }
 
     @RequestMapping(value = "/rest/getImage/", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
@@ -272,7 +278,7 @@ public class RestfulThreatController extends BaseController {
                 final HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.IMAGE_PNG);
 
-                return new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.CREATED);
+                return new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.OK);
             }
             return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
         }
@@ -307,12 +313,14 @@ public class RestfulThreatController extends BaseController {
                 BufferedOutputStream stream = new BufferedOutputStream(
                         new FileOutputStream(serverFile));
                 stream.write(bytes);
+                stream.close();
 
                 threat.setPathToPhoto(dir.getAbsolutePath()
                         + File.separator + threatUuid);
                 threatDAO.update(threat);
 
-                return new ResponseEntity<String>("{\"status\" : \"Success\"}",HttpStatus.NOT_FOUND);
+                return new ResponseEntity<String>("{\"status\" : \"Success\" ,\"what\" : \"image" +
+                        " added\"}",HttpStatus.OK);
             }
             catch (Exception e) {
                 return new ResponseEntity<String>("{\"status\" : \"Failure\"}",HttpStatus.NOT_FOUND);

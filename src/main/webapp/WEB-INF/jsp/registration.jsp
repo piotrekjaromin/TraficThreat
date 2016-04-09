@@ -61,7 +61,7 @@
 <div class="panel panel-primary">
     <div class="panel-heading">
         Registration
-        <button class="btn btn-default" onclick="window.location.href='/'">Go to main page</button>
+        <button class="btn btn-default" onclick="window.location.href='/TrafficThreat'">Go to main page</button>
     </div>
     <div class="panel-body">
         <input type="text" id="loginReg" class="form-control" placeholder="Login">

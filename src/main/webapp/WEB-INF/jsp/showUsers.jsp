@@ -8,18 +8,13 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script>
-        function insert() {
-            $("#users").val(JSON.stringify(${users}, null, 4));
-        }
 
-    </script>
 </head>
 <body>
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Show threats
+        Show users
         <button class="btn btn-default" onclick="window.location.href='/TrafficThreat'">Go to main page</button>
     </div>
     <div class="panel-body">

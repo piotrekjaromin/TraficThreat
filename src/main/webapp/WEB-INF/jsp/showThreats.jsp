@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -29,7 +30,7 @@
         function approve(threatUuid) {
             $.ajax({
                 type: "POST",
-                url: "approve",
+                url: "admin/approve",
                 dataType: 'text',
                 data: {
                     uuid: threatUuid
@@ -48,7 +49,7 @@
         function disapprove(threatUuid) {
             $.ajax({
                 type: "POST",
-                url: "disapprove",
+                url: "admin/disapprove",
                 dataType: 'text',
                 data: {
                     uuid: threatUuid
@@ -67,7 +68,7 @@
         function deleteThreat(threatUuid) {
             $.ajax({
                 type: "POST",
-                url: "deleteThreat",
+                url: "admin/deleteThreat",
                 dataType: 'text',
                 data: {
                     uuid: threatUuid
@@ -105,9 +106,11 @@
                     <th>coordinates</th>
                     <th>is approved</th>
                     <th>show image</th>
-                    <th>approve</th>
-                    <th>delete</th>
-                    <th>edit</th>
+                    <sec:authorize access="hasRole('ADMIN')">
+                        <th>approve</th>
+                        <th>delete</th>
+                        <th>edit</th>
+                    </sec:authorize>
                 </tr>
                 <c:forEach items="${threats}" var="threat">
                     <tr>
@@ -134,28 +137,34 @@
                             </c:otherwise>
                         </c:choose>
 
-                        <c:choose>
-                            <c:when test="${threat.isApproved eq true}">
-                                <td>
-                                    <button class="btn btn-default" onclick="disapprove('${threat.uuid}')">Disapprove
-                                    </button>
-                                </td>
-                            </c:when>
-                            <c:otherwise>
-                                <td>
-                                    <button class="btn btn-default" onclick="approve('${threat.uuid}')">Approve</button>
-                                </td>
-                            </c:otherwise>
-                        </c:choose>
+                        <sec:authorize access="hasRole('ADMIN')">
 
-                        <td>
-                            <button class="btn btn-default" onclick="deleteThreat('${threat.uuid}')">delete</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-default" onclick="location.href='getThreat/?uuid=${threat.uuid}'">
-                                edit
-                            </button>
-                        </td>
+                            <c:choose>
+                                <c:when test="${threat.isApproved eq true}">
+                                    <td>
+                                        <button class="btn btn-default" onclick="disapprove('${threat.uuid}')">
+                                            Disapprove
+                                        </button>
+                                    </td>
+                                </c:when>
+                                <c:otherwise>
+                                    <td>
+                                        <button class="btn btn-default" onclick="approve('${threat.uuid}')">Approve
+                                        </button>
+                                    </td>
+                                </c:otherwise>
+                            </c:choose>
+
+                            <td>
+                                <button class="btn btn-default" onclick="deleteThreat('${threat.uuid}')">delete</button>
+                            </td>
+                            <td>
+                                <button class="btn btn-default"
+                                        onclick="location.href='getThreat/?uuid=${threat.uuid}'">
+                                    edit
+                                </button>
+                            </td>
+                        </sec:authorize>
                     </tr>
                 </c:forEach>
 

@@ -18,7 +18,7 @@
         function edit() {
             $.ajax({
                 type: "POST",
-                url: "/TrafficThreat/editThreat",
+                url: "/TrafficThreat/admin/editThreat",
                 dataType: 'text',
                 data: {
                     uuid: $("#uuid").val(),

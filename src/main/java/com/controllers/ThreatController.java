@@ -30,13 +30,13 @@ import java.util.Date;
 @Controller
 public class ThreatController extends BaseController {
 
-    @RequestMapping(value = "/addThreat", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/addThreat", method = RequestMethod.GET)
     public String goAddThreat(ModelMap model) {
         return "addThreat";
     }
 
 
-    @RequestMapping(value = {"/addThreat"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/user/addThreat"}, method = RequestMethod.POST)
     @ResponseBody
     public String addThreat(HttpServletRequest request) {
         String typeOfThreat = request.getParameter("typeOfThreat");
@@ -44,6 +44,12 @@ public class ThreatController extends BaseController {
         String coordinates = request.getParameter("coordinates");
         String location = request.getParameter("location");
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(coordinates.split(";").length!=2)
+            return "Error: bad coordinates";
+
+        if(location.split(";").length!=2)
+            return "Error: bad location";
 
         Coordinates coordinates1 = new Coordinates();
         coordinates1.setHorizontal(coordinates.split(";")[0]);
@@ -69,12 +75,12 @@ public class ThreatController extends BaseController {
 
     }
 
-    @RequestMapping(value = "/addImage", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/addImage", method = RequestMethod.GET)
     public String goAddImage(ModelMap model) {
         return "addImage";
     }
 
-    @RequestMapping(value = {"/addImage"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/user/addImage"}, method = RequestMethod.POST)
     @ResponseBody
     public String addImage(HttpServletRequest request , @RequestParam("file") MultipartFile file) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -101,7 +107,7 @@ public class ThreatController extends BaseController {
                 BufferedOutputStream stream = new BufferedOutputStream(
                         new FileOutputStream(serverFile));
                 stream.write(bytes);
-
+                stream.close();
                 threat.setPathToPhoto(dir.getAbsolutePath()
                         + File.separator + threatUuid);
                 threatDAO.update(threat);
@@ -123,12 +129,12 @@ public class ThreatController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/addVoteForThreat", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/addVoteForThreat", method = RequestMethod.GET)
     public String goAddVote(ModelMap model) {
         return "addVote";
     }
 
-    @RequestMapping(value = {"/addVoteForThreat"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/user/addVoteForThreat"}, method = RequestMethod.POST)
     @ResponseBody
     public String addVote(HttpServletRequest request) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -166,7 +172,7 @@ public class ThreatController extends BaseController {
         return "showLogs";
     }
 
-    @RequestMapping(value = "/showUsers", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/showUsers", method = RequestMethod.GET)
     public String showUsers(ModelMap model) {
         model.addAttribute("users", userModelDAO.getAll());
         return "showUsers";
@@ -197,7 +203,7 @@ public class ThreatController extends BaseController {
         return "Failure";
     }
 
-    @RequestMapping(value = "/approve", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/admin/approve", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
     public String approve(HttpServletRequest request) {
         String threatUuid = request.getParameter("uuid");
@@ -215,7 +221,7 @@ public class ThreatController extends BaseController {
         return "bad uuid";
     }
 
-    @RequestMapping(value = "/disapprove", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/admin/disapprove", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
     public String disapprove(HttpServletRequest request) {
         String threatUuid = request.getParameter("uuid");
@@ -233,7 +239,7 @@ public class ThreatController extends BaseController {
         return "bad uuid";
     }
 
-    @RequestMapping(value = "/deleteThreat", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/admin/deleteThreat", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
     public String delete(HttpServletRequest request) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -244,7 +250,7 @@ public class ThreatController extends BaseController {
             return "Failure: bad uuid";
         }
 
-        if(!userModelDAO.getByLogin(userDetails.getUsername()).getUserRole().getType().equals("lADMIN"))
+        if(!userModelDAO.getByLogin(userDetails.getUsername()).getUserRole().getType().equals("ADMIN"))
         return "Failure: no permission";
 
         Threat threat1 = threatDAO.get(threatUuid);
@@ -260,7 +266,7 @@ public class ThreatController extends BaseController {
         threat.deleteAllConection();
         threatDAO.update(threat);
 
-        if(!threat1.getPathToPhoto().equals("")) {
+        if(threat1.getPathToPhoto()!=null) {
             File file = new File(threat1.getPathToPhoto());
             file.delete();
         }
@@ -286,7 +292,7 @@ public class ThreatController extends BaseController {
         return "editThreat";
     }
 
-    @RequestMapping(value = "/editThreat", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/admin/editThreat", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
     public String editThreat(HttpServletRequest request) {
         String threatUuid = request.getParameter("uuid");

@@ -17,10 +17,10 @@
 <div class="panel panel-primary">
     <div class="panel-heading">
         Add Image
-        <button class="btn btn-default goToMainPage" onclick="window.location.href='/'">Go to main page</button>
+        <button class="btn btn-default goToMainPage" onclick="window.location.href='/TrafficThreat'">Go to main page</button>
     </div>
     <div class="panel-body">
-        <form method="POST" enctype="multipart/form-data" action="addImage">
+        <form method="POST" enctype="multipart/form-data" action="user/addImage">
             <input type="file" name="file"/>
             <input class="form-control" type="text" name="uuid" placeholder="uuid"/>
             <input class="btn btn-default" type="submit" value="Upload"/>

@@ -60,6 +60,10 @@ public class LoginController extends BaseController {
         return "index";
     }
 
+    @RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)
+    public String accessDenied() {
+        return "accessDenied";
+    }
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registration() {

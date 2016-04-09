@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <sec:authorize access="hasAnyRole('ADMIN', 'USER')">
 
     <sec:authentication var="principal" property="principal"/>
