@@ -27,7 +27,6 @@
 
         <sec:authorize access="hasAnyRole('ADMIN', 'USER')">
             <button class='btn btnMenu btn-primary' onclick="location.href='user/addThreat'">Add threat</button>
-            <button class='btn btnMenu btn-primary' onclick="location.href='user/addVoteForThreat'">Add vote</button>
             <button class='btn btnMenu btn-primary' onclick="location.href='user/addImage'">Add image</button>
             <button class='btn btnMenu btn-primary' onclick="location.href='showLogs'">Show logs</button>
         </sec:authorize>

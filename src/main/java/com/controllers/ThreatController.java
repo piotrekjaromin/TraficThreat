@@ -42,20 +42,20 @@ public class ThreatController extends BaseController {
         String typeOfThreat = request.getParameter("typeOfThreat");
         String description= request.getParameter("description");
         String coordinates = request.getParameter("coordinates");
-        String location = request.getParameter("location");
+        String location = request.getParameter("address");
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if(coordinates.split(";").length!=2)
             return "Error: bad coordinates";
 
-        if(location.split(";").length!=2)
+        if(location.split(",").length!=2)
             return "Error: bad location";
 
         Coordinates coordinates1 = new Coordinates();
         coordinates1.setHorizontal(coordinates.split(";")[0]);
         coordinates1.setVertical(coordinates.split(";")[1]);
-        coordinates1.setCity(location.split(";")[1]);
-        coordinates1.setStreet(location.split(";")[0]);
+        coordinates1.setCity(location.split(",")[1]);
+        coordinates1.setStreet(location.split(",")[0]);
         coordinatesDAO.save(coordinates1);
         ThreatType threatType = new ThreatType();
         threatType.setThreatType(typeOfThreat);
@@ -123,14 +123,17 @@ public class ThreatController extends BaseController {
         }
     }
 
+
     @RequestMapping(value = "/showImage", method = RequestMethod.GET)
-    public String goShowdImage(ModelMap model) {
+    public String goShowImage(ModelMap model) {
         return "showImage";
     }
 
 
     @RequestMapping(value = "/user/addVoteForThreat", method = RequestMethod.GET)
-    public String goAddVote(ModelMap model) {
+    public String goAddVote(ModelMap model, HttpServletRequest request) {
+        if(request.getParameter("uuid")!=null)
+            request.setAttribute("threatUuid", request.getParameter("uuid"));
         return "addVote";
     }
 
@@ -286,7 +289,7 @@ public class ThreatController extends BaseController {
     }
 
     @RequestMapping(value = "/getThreat", method = RequestMethod.GET)
-    public String showUsers(ModelMap model, HttpServletRequest request) {
+    public String getThreat(ModelMap model, HttpServletRequest request) {
         String threatUuid = request.getParameter("uuid");
         model.addAttribute("threat", threatDAO.get(threatUuid));
         return "editThreat";
@@ -316,6 +319,13 @@ public class ThreatController extends BaseController {
             return "Success";
         }
         return "Failure: bad uuid";
+    }
+
+    @RequestMapping(value = "/getThreatDetails", method = RequestMethod.GET)
+    public String getThreatDetails(ModelMap model, HttpServletRequest request) {
+        String threatUuid = request.getParameter("uuid");
+        model.addAttribute("threat", threatDAO.get(threatUuid));
+        return "threatDetails";
     }
 
 

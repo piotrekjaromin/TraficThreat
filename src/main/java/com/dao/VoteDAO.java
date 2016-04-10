@@ -12,4 +12,8 @@ public class VoteDAO extends DatabaseDAO<Vote>{
     public void delete (Vote vote){
         getSession().delete(vote);
     }
+
+    public Vote get(String uuid) {
+        return getSession().get(com.models.Vote.class, uuid);
+    }
 }

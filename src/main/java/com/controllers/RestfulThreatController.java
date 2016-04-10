@@ -128,6 +128,24 @@ public class RestfulThreatController extends BaseController {
         return new ResponseEntity<String>("{\"status\" : \"Success\" ,\"what\" : \"vote added\"}",HttpStatus.OK);
     }
 
+    /**
+     * Dodawanie glosu (glosowanie).
+     * @return status
+     */
+
+    @RequestMapping(value = "/rest/getVote/", method = RequestMethod.GET)
+    public ResponseEntity<Vote> getVote(HttpServletRequest request) {
+
+        String voteUuid = request.getParameter("uuid");
+        Vote vote = voteDAO.get(voteUuid);
+
+
+        if (vote == null)
+            return new ResponseEntity<Vote>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<Vote>(vote, HttpStatus.OK);
+    }
+
 
     /**
      * Pobieranie wszystkich zagrozen. Dostep wszyscy

@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -30,7 +31,7 @@
         function addVote() {
             $.ajax({
                 type: "POST",
-                url: "user/addVoteForThreat",
+                url: "/TrafficThreat/user/addVoteForThreat",
                 dataType: 'text',
                 data: {
                     stars: $("#stars").val(),
@@ -58,8 +59,14 @@
     <div class="panel-body">
         <input type="number" id="stars" class="form-control" placeholder="Number of stars">
         <input type="text" id="comment" class="form-control" placeholder="Comment">
-        <input type="text" id="uuid" class="form-control" placeholder="Thread uuid">
-
+        <c:choose>
+            <c:when test="${threatUuid eq null}">
+                <input type="text" id="uuid" class="form-control" placeholder="Thread uuid">
+            </c:when>
+            <c:otherwise>
+                <input type="hidden" id="uuid" value="${threatUuid}">
+            </c:otherwise>
+        </c:choose>
 
         <button onclick="checkData()" class="btn btn-default">Add Vote</button>
         <div id="alert_placeholder"></div>

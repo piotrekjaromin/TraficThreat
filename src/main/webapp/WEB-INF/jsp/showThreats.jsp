@@ -102,15 +102,12 @@
                     <th>login</th>
                     <th>type</th>
                     <th>description</th>
-                    <th>votes</th>
-                    <th>coordinates</th>
                     <th>is approved</th>
-                    <th>show image</th>
                     <sec:authorize access="hasRole('ADMIN')">
                         <th>approve</th>
                         <th>delete</th>
-                        <th>edit</th>
                     </sec:authorize>
+                    <th>details</th>
                 </tr>
                 <c:forEach items="${threats}" var="threat">
                     <tr>
@@ -118,24 +115,7 @@
                         <td><c:out value="${threat.login}"/></td>
                         <td><c:out value="${threat.type.threatType}"/></td>
                         <td><c:out value="${threat.description}"/></td>
-                        <td>
-                            <c:forEach items="${threat.votes}" var="vote">
-                                <c:out value="${vote.numberOfStars}"/>
-                            </c:forEach>
-                        </td>
-                        <td><c:out value="${threat.coordinates.vertical}"/>;<c:out
-                                value="${threat.coordinates.horizontal}"/></td>
                         <td><c:out value="${threat.isApproved}"/></td>
-                        <c:choose>
-                            <c:when test="${threat.pathToPhoto ne null}">
-                                <td>
-                                    <button class="btn btn-default" onclick="showImage('${threat.uuid}')">show</button>
-                                </td>
-                            </c:when>
-                            <c:otherwise>
-                                <td>No photo</td>
-                            </c:otherwise>
-                        </c:choose>
 
                         <sec:authorize access="hasRole('ADMIN')">
 
@@ -143,13 +123,13 @@
                                 <c:when test="${threat.isApproved eq true}">
                                     <td>
                                         <button class="btn btn-default" onclick="disapprove('${threat.uuid}')">
-                                            Disapprove
+                                            disapprove
                                         </button>
                                     </td>
                                 </c:when>
                                 <c:otherwise>
                                     <td>
-                                        <button class="btn btn-default" onclick="approve('${threat.uuid}')">Approve
+                                        <button class="btn btn-default" onclick="approve('${threat.uuid}')">approve
                                         </button>
                                     </td>
                                 </c:otherwise>
@@ -158,15 +138,14 @@
                             <td>
                                 <button class="btn btn-default" onclick="deleteThreat('${threat.uuid}')">delete</button>
                             </td>
-                            <td>
-                                <button class="btn btn-default"
-                                        onclick="location.href='getThreat/?uuid=${threat.uuid}'">
-                                    edit
-                                </button>
-                            </td>
                         </sec:authorize>
+                        <td><button class="btn btn-default"
+                                    onclick="location.href='getThreatDetails/?uuid=${threat.uuid}'">
+                            details
+                        </button></td>
                     </tr>
                 </c:forEach>
+
 
             </table>
         </div>
