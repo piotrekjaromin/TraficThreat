@@ -92,7 +92,7 @@
                     <td>vote</td>
                     <td>
                         <c:forEach items="${threat.votes}" var="vote">
-                            ${vote.numberOfStars}, ${vote.login}, ${vote.comment}. ${vote.date}
+                            ${vote.numberOfStars}, ${vote.login}, ${vote.comment}. ${vote.date}<br/>
                         </c:forEach>
                     </td>
                 <tr>

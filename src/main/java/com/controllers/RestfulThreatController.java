@@ -141,7 +141,7 @@ public class RestfulThreatController extends BaseController {
 
 
         if (vote == null)
-            return new ResponseEntity<Vote>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Vote>(HttpStatus.PRECONDITION_FAILED);
 
         return new ResponseEntity<Vote>(vote, HttpStatus.OK);
     }
