@@ -31,6 +31,9 @@ public class LoginController extends BaseController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(ModelMap model) {
+
+        model.addAttribute("approvedThreats", threatDAO.getAllApproved());
+        model.addAttribute("notApprovedThreats", threatDAO.getAllNotApproved());
         return "index";
     }
 
