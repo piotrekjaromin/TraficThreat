@@ -230,6 +230,14 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.wildfly.plugins</groupId>
+        <artifactId>wildfly-maven-plugin</artifactId>
+        <version>1.0.2.Final</version>
+        <configuration>
+          <filename>${project.build.finalName}.war</filename>
+        </configuration>
+      </plugin>
     </plugins>
     </build>
 

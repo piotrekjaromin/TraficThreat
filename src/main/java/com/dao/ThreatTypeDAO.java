@@ -1,7 +1,10 @@
 package com.dao;
 
+import com.models.Threat;
 import com.models.ThreatType;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by piotrek on 05.03.16.
@@ -20,4 +23,9 @@ public class ThreatTypeDAO extends DatabaseDAO<ThreatType>{
     public void update(ThreatType threatType) {
         getSession().update(threatType);
     }
+
+    public List<ThreatType> getAll() {
+        return getSession().createQuery("from ThreatType").list();
+    }
+
     }

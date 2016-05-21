@@ -48,8 +48,20 @@ public class RestfulThreatController extends BaseController {
         coordinates1.setStreet(location.split(";")[0]);
         coordinatesDAO.save(coordinates1);
         ThreatType threatType = new ThreatType();
-        threatType.setThreatType(typeOfThreat);
-        threatTypeDAO.save(threatType);
+        List<ThreatType> threatTypes = threatTypeDAO.getAll();
+        for(ThreatType type : threatTypes) {
+            if(type.getThreatType() != null){
+                if(type.getThreatType().equals(typeOfThreat)){
+                    threatType = type;
+                    break;
+                }
+            }
+
+        }
+        if(threatType.getThreatType() == null){
+            threatType.setThreatType(typeOfThreat);
+            threatTypeDAO.save(threatType);
+        }
         Threat threat = new Threat();
         threat.setCoordinates(coordinates1);
         threat.setType(threatType);
@@ -159,6 +171,15 @@ public class RestfulThreatController extends BaseController {
             return new ResponseEntity<List<Threat>>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<List<Threat>>(threats, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/rest/getThreatTypes/", method = RequestMethod.GET)
+    public ResponseEntity<List<ThreatType>> listAllThreatType() {
+        List<ThreatType> threatTypes = threatTypeDAO.getAll();
+        if (threatTypes.isEmpty()) {
+            return new ResponseEntity<List<ThreatType>>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<List<ThreatType>>(threatTypes, HttpStatus.OK);
     }
 
 

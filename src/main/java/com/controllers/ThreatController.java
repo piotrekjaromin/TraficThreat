@@ -2,7 +2,6 @@ package com.controllers;
 
 
 import com.models.*;
-import javafx.application.Application;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +24,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.List;
 
 
 @Controller
@@ -32,6 +32,7 @@ public class ThreatController extends BaseController {
 
     @RequestMapping(value = "/user/addThreat", method = RequestMethod.GET)
     public String goAddThreat(ModelMap model) {
+        model.addAttribute("threatTypes", threatTypeDAO.getAll());
         return "addThreat";
     }
 
@@ -58,8 +59,20 @@ public class ThreatController extends BaseController {
         coordinates1.setStreet(location.split(",")[0]);
         coordinatesDAO.save(coordinates1);
         ThreatType threatType = new ThreatType();
-        threatType.setThreatType(typeOfThreat);
-        threatTypeDAO.save(threatType);
+        List<ThreatType> threatTypes = threatTypeDAO.getAll();
+        for(ThreatType type : threatTypes) {
+            if(type.getThreatType() != null){
+                if(type.getThreatType().equals(typeOfThreat)){
+                    threatType = type;
+                    break;
+                }
+            }
+
+        }
+        if(threatType.getThreatType() == null){
+            threatType.setThreatType(typeOfThreat);
+            threatTypeDAO.save(threatType);
+        }
         Threat threat = new Threat();
         threat.setCoordinates(coordinates1);
         threat.setType(threatType);
@@ -137,6 +150,7 @@ public class ThreatController extends BaseController {
         return "addVote";
     }
 
+
     @RequestMapping(value = {"/user/addVoteForThreat"}, method = RequestMethod.POST)
     @ResponseBody
     public String addVote(HttpServletRequest request) {
@@ -155,6 +169,31 @@ public class ThreatController extends BaseController {
         Threat threat = threatDAO.get(threadUuid);
         threat.addVote(vote);
         threatDAO.update(threat);
+
+        return "Success";
+    }
+
+    @RequestMapping(value = "/admin/addThreatType", method = RequestMethod.GET)
+    public String goAddThreatType(ModelMap model) {
+        return "addTypeOfThreat";
+    }
+
+    @RequestMapping(value = {"/admin/addThreatType"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String addThreatType(HttpServletRequest request) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String threatType= request.getParameter("threatType");
+
+        if(threatType.equals("")) {
+            return "Failure: no threat type name";
+        }
+
+        if(!userModelDAO.getByLogin(userDetails.getUsername()).getUserRole().getType().equals("ADMIN"))
+            return "Failure: no permission";
+
+        ThreatType threatType1 = new ThreatType();
+        threatType1.setThreatType(threatType);
+        threatTypeDAO.save(threatType1);
 
         return "Success";
     }

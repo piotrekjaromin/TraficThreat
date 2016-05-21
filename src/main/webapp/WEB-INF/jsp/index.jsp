@@ -92,6 +92,7 @@
 
         <sec:authorize access="hasRole('ADMIN')">
             <button class='btn btnMenu btn-primary' onclick="location.href='admin/showUsers'">Show users</button>
+            <button class='btn btnMenu btn-primary' onclick="location.href='admin/addThreatType'">Add threat type</button>
         </sec:authorize>
 
         <br/>

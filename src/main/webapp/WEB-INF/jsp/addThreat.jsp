@@ -152,8 +152,9 @@
 
             <select class="form-control" id="typeOfThreat" required>
                 <option value="" disabled selected hidden>Type of threat</option>
-                <option value="Stale">Stale</option>
-                <option value="Krotkotrwale">Krotkotrwale</option>
+                <c:forEach var="threatType" items="${threatTypes}">
+                    <option value=${threatType.threatType}>${threatType.threatType}</option>
+                </c:forEach>
             </select>
             <input type="text" id="description" class="form-control" placeholder="Description">
             <input type="hidden" id="coordinates" class="form-control">
