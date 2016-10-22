@@ -75,7 +75,7 @@
             <tr>
                 <td>location</td>
                 <td><input type="text" class="form-control"
-                           value="${threat.coordinates.street};${threat.coordinates.street}" id="location"/></td>
+                           value="${threat.coordinates.street};${threat.coordinates.city}" id="location"/></td>
             </tr>
         </table>
         <button class="btn btn-default" onclick="edit()">edit</button>

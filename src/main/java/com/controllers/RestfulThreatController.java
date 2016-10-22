@@ -141,7 +141,7 @@ public class RestfulThreatController extends BaseController {
     }
 
     /**
-     * Dodawanie glosu (glosowanie).
+     * pobieranie głosu.
      * @return status
      */
 
@@ -184,7 +184,7 @@ public class RestfulThreatController extends BaseController {
 
 
     /**
-     * Pobieranie wszystkich zagrozen. Dostep wszyscy
+     * Pobieranie wszystkich zagrozen użytkownika.
      * @return lista zagrozen
      */
 

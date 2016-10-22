@@ -20,7 +20,7 @@
         <button class="btn btn-default goToMainPage" onclick="window.location.href='/TrafficThreat'">Go to main page</button>
     </div>
     <div class="panel-body">
-        <form method="POST" enctype="multipart/form-data" action="user/addImage">
+        <form method="POST" enctype="multipart/form-data" action="addImage">
             <input type="file" name="file"/>
             <input class="form-control" type="text" name="uuid" placeholder="uuid"/>
             <input class="btn btn-default" type="submit" value="Upload"/>

@@ -2,7 +2,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="googlemaps" uri="/WEB-INF/googlemaps.tld" %>
-
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css">
@@ -75,7 +75,7 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Add Image
+        Main page
         <button class="btn btn-default goToMainPage" onclick="window.location.href='/TrafficThreat'">Go to main page
         </button>
     </div>
@@ -85,8 +85,8 @@
         <button class='btn btnMenu btn-primary' onclick="location.href='showThreats'">Show threats</button>
 
         <sec:authorize access="hasAnyRole('ADMIN', 'USER')">
-            <button class='btn btnMenu btn-primary' onclick="location.href='user/addThreat'">Add threat</button>
-            <button class='btn btnMenu btn-primary' onclick="location.href='user/addImage'">Add image</button>
+            <button class='btn btnMenu btn-primary' onclick="location.href='/TrafficThreat/user/addThreat'">Add threat</button>
+            <button class='btn btnMenu btn-primary' onclick="location.href='/TrafficThreat/user/addImage'">Add image</button>
             <button class='btn btnMenu btn-primary' onclick="location.href='showLogs'">Show logs</button>
         </sec:authorize>
 
